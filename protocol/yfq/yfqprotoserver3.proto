@@ -1,0 +1,316 @@
+syntax = "proto2";
+package YfqProtocol;
+  
+option java_package = "com.ftrd.yfq.protocol";
+option java_outer_classname = "YfqParser";
+
+//心跳包
+//消息ID:0x00000001
+message HeartBeat{
+	optional int64 date_time = 1;//unix 时间戳
+}
+
+// 通用应答包
+// 消息ID:0x00000010
+message CommonAns {
+	optional int32 error_code = 1;	// 错误码
+	optional int32 request_id = 2;	// 对应的请求ID
+	enum Progress {	// 对应的请求的执行状态枚举
+    Pending = 0;	// 请求已收到，等待执行
+    DOING = 1;		// 正在处理请求
+    DONE = 2;			// 请求已处理完成
+  }
+  optional Progress progress = 3;	// 对应的请求的执行状态
+}
+
+// 已登录第二版服务器的用户的信息包
+// 当用户登录第二版服务器成功后，要向第三版服务器发送此信息包
+// 消息ID:0x00000011
+message LoginedUserInfo {
+	optional string user_id = 1;//用户ID
+}
+
+/*******************************************品质生活建议************************************************/
+//APP向服务器发送：品质生活请求 
+//消息ID:0x00000002  
+/*
+*	提醒类型同品质生活日提醒
+*	日期：日、周、月、季、半年、年，提醒消息或提醒请求消息中日期填最后一天日期，比如3月份月提醒消息中，日期填2016-03-31
+*	序号：日、周、月、季、半年、年，用户使用第几天、第几周、第几季、第几半年、第几年
+*/
+message QualityLifeNotifyReq{
+	optional string user_id = 1;//用户ID
+	optional string host_id = 2;//绑定的主机ID
+	optional int32 notify_type = 3;//提醒类型
+	optional string date = 4;//日期
+	optional int32 order = 5;//序号
+}
+
+//服务器向APP发送：品质生活日提醒 
+//消息ID:0x00000003 应客户端请求，服务器主动回复
+//消息ID:0x00000013 服务器消息推送，客户端被动接收
+/*
+*   提醒类型 服务器要向APP回复的消息中的消息ID
+*	0x00000003 品质生活日提醒
+*	0x00000004 品质生活周提醒
+*	0x00000005 品质生活月提醒
+*	0x00000006 品质生活季提醒
+*	0x00000007 品质生活半年提醒
+*	0x00000008 品质生活年提醒
+*	日期：日、周、月、季、半年、年，提醒消息或提醒请求消息中日期填最后一天日期，比如3月份月提醒消息中，日期填2016-03-31
+*	序号：日、周、月、季、半年、年，用户使用第几天、第几周、第几季、第几半年、第几年
+*/  
+message QualityLifeDayNotifyAns{
+	optional string user_id = 1;//用户ID
+	optional string user_name = 2;//用户姓名
+	optional int32 age = 3;//年龄
+	optional int32 sex = 4;//性别(0 女、1 男)
+	optional int32 notify_type = 5;//提醒类型
+	optional string date = 6;//日期
+	optional int32 order = 7;//序号
+	optional int32 health_score = 8;//健康总分
+	optional string weather_relate = 9;//天气相关，包括温度、空气质量、节气,json字符串格式
+	optional string expert_segestion = 10;//专家建议
+}
+
+//服务器向APP发送：品质生活周提醒 
+//消息ID:0x00000004 应客户端请求，服务器主动回复
+//消息ID:0x00000014 服务器消息推送，客户端被动接收
+/*
+*	提醒类型同品质生活日提醒
+*	日期 填写星期天的日期	格式YYYY-MM-DD 比如2016-03-06
+*	序号：日、周、月、季、半年、年，用户使用第几天、第几周、第几季、第几半年、第几年
+*/
+message QualityLifeWeekNotifyAns{
+	optional string user_id = 1;//用户ID
+	optional string user_name = 2;//用户姓名
+	optional int32 age = 3;//年龄
+	optional int32 sex = 4;//性别(0 女、1 男)
+	optional int32 notify_type = 5;//提醒类型
+	optional string date = 6;//日期
+	optional int32 order = 7;//序号
+	optional int32 health_score = 8;//健康总分
+	optional string expert_segestion = 9;//专家建议
+	optional string regular_act = 10;//日常活动
+	optional string sleep_condition = 11;//睡眠状况
+	optional string body_measure = 12;//身体测量
+	optional string run_scence = 13;//运动科学
+	optional string eat_nutrition = 14;//膳食营养
+}
+
+//服务器向APP发送：品质生活月提醒
+//消息ID:0x00000005	应客户端请求，服务器主动回复
+//消息ID:0x00000015 服务器消息推送，客户端被动接收
+/*
+*	提醒类型同品质生活日提醒
+*	日期 填写本月最后一天的日期 格式YYYY-MM-DD 比如2016-03-31
+*	序号：日、周、月、季、半年、年，用户使用第几天、第几周、第几季、第几半年、第几年
+*/
+message QualityLifeMonthNotifyAns{
+	optional string user_id = 1;//用户ID
+	optional string user_name = 2;//用户姓名
+	optional int32 age = 3;//年龄
+	optional int32 sex = 4;//性别(0 女、1 男)
+	optional int32 notify_type = 5;//提醒类型
+	optional string date = 6;//日期
+	optional int32 order = 7;//序号
+	optional int32 health_score = 8;//健康总分
+	optional string expert_segestion = 9;//专家建议
+	optional string regular_act = 10;//日常活动
+	optional string sleep_condition = 11;//睡眠状况
+	optional string body_measure = 12;//身体测量
+	optional string run_scence = 13;//运动科学
+	optional string eat_nutrition = 14;//膳食营养
+}
+
+//服务器向APP发送：品质生活季提醒
+//消息ID:0x00000006	应客户端请求，服务器主动回复
+//消息ID:0x00000016 服务器消息推送，客户端被动接收
+/*
+*	提醒类型同品质生活日提醒
+*	日期 填写本季度最后一天的日期 格式YYYY-MM-DD 比如2016-03-31
+*	序号：日、周、月、季、半年、年，用户使用第几天、第几周、第几季、第几半年、第几年
+*/
+message QualityLifeSeasonNotifyAns{
+	optional string user_id = 1;//用户ID
+	optional string user_name = 2;//用户姓名
+	optional int32 age = 3;//年龄
+	optional int32 sex = 4;//性别(0 女、1 男)
+	optional int32 notify_type = 5;//提醒类型
+	optional string date = 6;//日期
+	optional int32 order = 7;//序号
+	optional int32 health_score = 8;//健康总分
+	optional string expert_segestion = 9;//专家建议
+	optional string regular_act = 10;//日常活动
+	optional string sleep_condition = 11;//睡眠状况
+	optional string body_measure = 12;//身体测量
+	optional string run_scence = 13;//运动科学
+	optional string eat_nutrition = 14;//膳食营养
+	optional string psychology_health = 15;//心理健康
+}
+
+//服务器向APP发送：品质生活半年提醒 
+//消息ID:0x00000007	应客户端请求，服务器主动回复
+//消息ID:0x00000017 服务器消息推送，客户端被动接收
+/*
+*	提醒类型同品质生活日提醒
+*	日期 填写该半年最后一天的日期 格式YYYY-MM-DD 比如2016-06-30
+*	序号：日、周、月、季、半年、年，用户使用第几天、第几周、第几季、第几半年、第几年
+*/
+message QualityLifeHalfYearNotifyAns{
+	optional string user_id = 1;//用户ID
+	optional string user_name = 2;//用户姓名
+	optional int32 age = 3;//年龄
+	optional int32 sex = 4;//性别(0 女、1 男)
+	optional int32 notify_type = 5;//提醒类型
+	optional string date = 6;//日期
+	optional int32 order = 7;//序号
+	optional int32 health_score = 8;//健康总分
+	optional string expert_segestion = 9;//专家建议
+	optional string regular_act = 10;//日常活动
+	optional string sleep_condition = 11;//睡眠状况
+	optional string body_measure = 12;//身体测量
+	optional string run_scence = 13;//运动科学
+	optional string eat_nutrition = 14;//膳食营养
+	optional string psychology_health = 15;//心理健康
+}
+
+//服务器向APP发送：品质生活年提醒 
+//消息ID:0x00000008	应客户端请求，服务器主动回复
+//消息ID:0x00000018 服务器消息推送，客户端被动接收
+/*
+*	提醒类型同品质生活日提醒
+*	日期 填写该年最后一天的日期 格式YYYY-MM-DD 比如2016-12-31
+*	序号：日、周、月、季、半年、年，用户使用第几天、第几周、第几季、第几半年、第几年
+*/
+message QualityLifeYearNotifyAns{
+	optional string user_id = 1;//用户ID
+	optional string user_name = 2;//用户姓名
+	optional int32 age = 3;//年龄
+	optional int32 sex = 4;//性别(0 女、1 男)
+	optional int32 notify_type = 5;//提醒类型
+	optional string date = 6;//日期
+	optional int32 order = 7;//序号
+	optional int32 health_score = 8;//健康总分
+	optional string expert_segestion = 9;//专家建议
+	optional string regular_act = 10;//日常活动
+	optional string sleep_condition = 11;//睡眠状况
+	optional string body_measure = 12;//身体测量
+	optional string run_scence = 13;//运动科学
+	optional string eat_nutrition = 14;//膳食营养
+	optional string psychology_health = 15;//心理健康
+}
+
+//第二版服务器向第三版服务器传输海思康利历史数据 
+//消息ID:0x00000009
+message TransHSKLHisData {
+	optional string user_id = 1;//用户ID,由数字、英文字母、下划线、英文句号、@组成的，以’\0’结尾的字符串
+	optional string host_id = 2;//主机ID。由数字、英文字母、下划线、英文句号、@组成的,
+								 //以’\0’结尾的字符串。
+	optional string date = 3;//日期,
+	optional int32 clear_sleep = 4;//清醒时长,时长单位(秒)
+	optional int32 low_sleep = 5;//浅睡时长,时长单位(秒)
+	optional int32 mid_sleep = 6;//中睡时长,时长单位(秒)
+	optional int32 deep_sleep = 7;//深睡时长,时长单位(秒)
+	optional float clear_pge = 8;//清醒占比,例：35.5%
+	optional float low_pge = 9;//浅睡占比,例：35.5%
+	optional float mid_pge = 10;//中睡占比,例：35.5%
+	optional float deep_pge = 11;//深睡占比,例：35.5%
+}
+
+//第二版服务器向第三版服务器传输起夜次数/入卫时间
+//消息ID:0x0000000a
+message TransNightGuide {
+	optional string user_id = 1;//用户ID,由数字、英文字母、下划线、英文句号、@组成的，以’\0’结尾的字符串
+	optional string host_id = 2;//主机ID。由数字、英文字母、下划线、英文句号、@组成的,以’\0’结尾的字符串。
+	optional int32 record_num = 3;//记录条数
+	message NightGuideNode {
+		optional int32 domain_id = 1;//区域ID,老人离开卧室后,最终所到的区域的ID。
+		optional int32 node_id = 2;//设备NodeId,老人离开卧室后,感应到老人的传感器的ID。
+		optional string create_time = 3;//记录时间,格式为:yyyy-MM-dd HH:mm:ss，以’\0’结尾
+		optional int32 night_duration = 4;//起夜时长,单位秒。老人离开卧室,到重新回到卧室的时间间隔。
+		optional int32 night_interval = 5;//起夜间隔,单位秒。老人离开卧室,与上次离开卧室的时间间隔。
+	}
+	repeated NightGuideNode night_guide_node = 4;//记录列表
+}
+
+//第二版服务器向第三版服务器传输血压值 
+//消息ID:0x0000000b
+message TransBloodPressure {
+	optional string user_id = 1;//用户ID,由数字、英文字母、下划线、英文句号、@组成的，以’\0’结尾的字符串
+	optional string host_id = 2;//主机ID。由数字、英文字母组成，以’\0’结尾的字符串。
+	optional float systolic_pressure = 3;//收缩压
+	optional float diastolic_pressure = 4;//舒张压
+	optional float heart_beat = 5;//心率
+	optional string date = 6;//上传时间
+}
+
+//第二版服务器向第三版服务器传输身体成分值 
+//消息ID:0x0000000c
+message TransBodyComposition {
+	optional string user_id = 1;//用户ID。由数字、英文字母、下划线、英文句号、@组成的，以’\0’结尾的字符串。
+	optional string host_id = 2;//主机ID。由数字、英文字母组成以’\0’结尾的字符串。
+	optional int32 record_num = 3;//记录条数
+	message BodyComposition {
+		//性别16 0为女，1为男
+		optional int32 sex = 1;
+		//年龄17
+		optional  int32 age = 2;
+		//身高18
+		optional  int32 height = 3;
+		//体重19
+		optional  float  weight = 4;
+		//运动级别23
+		optional  int32 sport_level = 5;
+		//BMI24
+		optional  float bmi = 6;
+		//脂肪率28
+		optional  float fat_level = 7;
+		//水分率32
+		optional  float water_level = 8;
+		//肌肉含量36
+		optional  float muscle = 9;
+		//骨骼含量40
+		optional  float bones = 10;
+		//内脏脂肪率44
+		optional  int32 viscus = 11;
+		//热量值45
+		optional  int32 heat = 12;
+		//人体阻抗47
+		optional  int32 body_resistive = 13;
+		//上传时间49
+		optional  string date = 14;//格式为:yyyy-MM-dd HH:mm:ss，以’\0’结尾
+	}
+	repeated BodyComposition body_list = 4;//身体成分记录列表
+}
+
+//第二版服务器向第三版服务器传输温度值 
+//消息ID:0x0000000d
+message TransThermometer {
+	optional string user_id = 1;//用户ID由数字、英文字母、下划线、英文句号、@组成的，以’\0’结尾的字符串。
+	optional string host_id = 2;//主机ID。由数字、英文字母组成，以’\0’结尾的字符串。
+	optional  float thermom_value = 3;//温度值，为单精度浮点型，占4个字节。
+	optional  string date = 4;//格式为:yyyy-MM-dd HH:mm:ss，以’\0’结尾
+}
+
+//传输过来的血氧 
+//消息ID:0x0000000e
+//传输过来的心电 
+//消息ID:0x0000000f
+
+//用户请求加载周数，月数，季数，半年数，年数
+//消息ID:0x00000019
+message QualityLifeOrderLoadReq {
+	optional string user_id = 1;//用户ID由数字、英文字母、下划线、英文句号、@组成的，以’\0’结尾的字符串。
+	optional string host_id = 2;//绑定的主机ID
+	optional int32 notify_type = 3;//提醒类型
+}
+//服务器应客户端请求向客户端发送周数，月数，季数，半年数，年数
+//maxOrder:当前最大周数，
+message QualityLifeOrderLoadAns {
+	optional string user_id = 1;//用户ID
+	optional int32 notify_type = 2;//提醒类型
+	optional string date = 3;//日期，第一周最后一天日期
+	optional int32 maxOrder = 4;//当前最大周数
+}
+
